@@ -1,0 +1,322 @@
+﻿<Controls:MetroWindow x:Class="ShoppingListApp.CreateColesForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+        MouseDown="MetroWindow_MouseDown"
+        Title="Cheap Cheap Supermarket App" MinHeight="650" MinWidth="950"
+        Height="650" Width="950"
+        SizeChanged="MetroWindow_SizeChanged"
+        GlowBrush="{DynamicResource MahApps.Brushes.Accent}"  
+        
+            WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <SolidColorBrush x:Key="ColesRedColor" Color="#ed1c22"/>
+        <SolidColorBrush x:Key="GreyBorderColor" Color="#F6F4F6"/>
+    </Window.Resources>
+
+    <Grid Background="{StaticResource ColesRedColor}" x:Name="mainGrid"
+          Focusable="True">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+        
+        <Rectangle Grid.Row="1" Grid.ColumnSpan="6" Fill="#ffffff"/>
+        <Image Source="C:\Users\gunje\Documents\ShoppingListProjectFiles\ShoppingListApp\coles-logo.jpg"
+               Grid.Column="1" Grid.Row="1" Margin="10"/>
+
+        <Button x:Name="centralFlyoutButton"  Click="centralFlyoutButton_Click" Background="Transparent" 
+                Grid.Row="0" Grid.Column="0"
+                Margin="28, 4">
+            <Button.Content>
+                <iconPacks:PackIconMaterial Kind="FormatHorizontalAlignRight" 
+                                        HorizontalAlignment="Center" 
+                                        VerticalAlignment="Center" 
+                                        Height="35" Width="35" 
+                                        Foreground="White"/>
+            </Button.Content>
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="CornerRadius" Value="28"/>
+                </Style>
+            </Button.Resources>
+        </Button>
+        <Button x:Name="shpCartNavigationButton" Click="shpCartNavigationButton_Click" Background="#ed1c22" Grid.Row="0" Grid.Column="5">
+            <iconPacks:PackIconMaterial Kind="CartOutline" 
+                                        HorizontalAlignment="Center" 
+                                        VerticalAlignment="Center" 
+                                        Height="40" Width="40" 
+                                        Foreground="White"/>
+        </Button>
+
+        <Canvas Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="3" Margin="0, 0, 0, 70" Background="White" x:Name="Canvas_Item">
+            <Grid x:Name="Canvas_Grid" Height="{Binding ElementName=Canvas_Item, Path=ActualHeight}"
+                  Width="{Binding ElementName=Canvas_Item, Path=ActualWidth}"
+                  HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Rectangle Grid.Column="0" Grid.Row="0" Fill="Beige"/>
+                <Rectangle Grid.Column="0" Grid.Row="1" Fill="Red"/>
+                <Rectangle Grid.Column="1" Grid.Row="0" Fill="Blue"/>
+                <Rectangle Grid.Column="1" Grid.Row="1" Fill="OrangeRed"/>
+            </Grid>
+        </Canvas>
+
+
+        <Border Grid.ColumnSpan="2" Grid.RowSpan="6" Margin="0,0,50,0">
+            <mah:Flyout
+                x:Name="CentralFlyout"
+                Position="Left"
+                Width="200"
+                CloseButtonVisibility="Hidden"
+                FlowDirection="LeftToRight"        
+                IsOpen="False"
+                Background="White">
+                <Grid x:Name="CentralFlyoutGrid" Margin="0,-74,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="7*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Shop" HorizontalAlignment="Center" VerticalAlignment="Center"
+                               FontSize="28" FontWeight="DemiBold" FontFamily="Avant Garde Gothic"/>
+                    <Button Grid.Row="0" Grid.Column="1"
+                            Margin="20, 20, 10, 20" BorderBrush="{StaticResource GreyBorderColor}" 
+                            Background="White" x:Name="CentralFlyoutCloseButton"
+                            Click="CentralFlyoutCloseButton_Click">
+                        <Button.Content>
+                            <iconPacks:PackIconMaterial Kind="ArrowLeft" 
+                                        HorizontalAlignment="Center" 
+                                        VerticalAlignment="Center" 
+                                        Height="30" Width="30" 
+                                        Foreground="Black"/>
+                        </Button.Content>
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="{Binding FlyoutCornerRadius}"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <ListBox Grid.Row="1" x:Name="CentralFlyoutNavigationBar"
+                            ItemsSource="{Binding ImgKeyValuePair}"
+                            HorizontalContentAlignment="Center"
+                            Background="White"
+                            BorderBrush="{StaticResource GreyBorderColor}"
+                            BorderThickness="3"
+                            Grid.ColumnSpan="2">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Button x:Name="CategorySelectionButton" Click="CategorySelectionButton_Click"
+                                            Background="White" BorderBrush="White">
+                                    <Button.Content>
+                                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5">
+                                            <Image Source="{Binding Path=Value}" RenderOptions.BitmapScalingMode="Fant"
+                                        Height="30" Width="30" HorizontalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Path=Key}" FontFamily="Source Sans ExtraLight" FontSize="14"
+                                            HorizontalAlignment="Center" FontWeight="Medium"/>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+                
+            </mah:Flyout>
+
+        </Border>
+
+        <TextBox Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Height="60" 
+                 MinWidth="200"
+                 Foreground="Black"
+                 FontFamily="\Fonts\ITC Avant Garde Gothic LT Demi.ttf"
+                 HorizontalAlignment="Stretch"
+                 BorderBrush="#676167"
+                 BorderThickness="1"
+                 x:Name="searchBar"
+                 Padding="20"
+                 Margin="50, 0"
+                 FontSize="16"
+                 KeyDown="searchBar_KeyDown"
+                 GotFocus="searchBar_GotFocus">
+            <TextBox.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="30"/>
+                </Style>
+            </TextBox.Resources>
+        </TextBox>
+
+        <ListView x:Name="ItemCatalogue"
+                    ItemsSource="{Binding Products}"
+                    Grid.Column="3" Grid.Row="2" 
+                    Grid.ColumnSpan="2" 
+                    MinHeight="430" MinWidth="450"
+                    Margin="20, 50" Grid.RowSpan="4"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ScrollViewer.CanContentScroll="True"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    Padding="10"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    Background="White">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="{Binding Path=NumRows}" HorizontalAlignment="Center"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Stretch">
+                        <TextBlock Text="{Binding ProductName}" FontSize="18" FontWeight="Bold" FontFamily="Source Sans Pro"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="WrapWithOverflow"
+                                   TextAlignment="Center"
+                                   Padding="5"/>
+                        <Image x:Name="ProductImages" Source="{Binding Image}"
+                               RenderOptions.BitmapScalingMode="Fant"
+                               Width="150"
+                               Height="150"
+                               HorizontalAlignment="Center"/>
+                        <TextBlock FontSize="16" FontFamily="Source Sans ExtraLight" FontWeight="ExtraLight"
+                                   HorizontalAlignment="Left" VerticalAlignment="Center"
+                                   Padding="1">
+                            <Run Text="$"/>
+                            <Run Text="{Binding Price}"/>
+                            <Run Text="                                                 "/>
+                            <Run Text="{Binding Quantity}"/>
+                        </TextBlock>
+                        <TextBlock Text="{Binding PricePerQuantity}" FontSize="16" FontWeight="ExtraLight" FontFamily="Source Sans Pro ExtraLight"
+                                   HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                        <Button x:Name="shpCartItemButton" HorizontalAlignment="Right" Width="50" Background="White" Click="shpCartItemButton_Click">
+                            <iconPacks:PackIconMaterial Kind="CartOutline" 
+                                        HorizontalAlignment="Right" 
+                                        VerticalAlignment="Center" 
+                                        Height="30" Width="30" 
+                                        Foreground="Black"/>
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="5"/>
+                                    <Setter Property="BorderBrush" Value="#666666"/>
+                                    <Setter Property="BorderThickness" Value="3"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Grid x:Name="NavigationBarGrid" Grid.Column="5" Grid.Row="2" Grid.RowSpan="4" Visibility="{Binding VisibleNav}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="450"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="1">
+                <Button Style="{DynamicResource NavButtonStyle}" Visibility="{Binding SeventhButtonVisible}"
+                        Margin="10" Height="40" Width="40" HorizontalAlignment="Left">
+                    <TextBlock Text="{Binding SeventhButtonText}"/>
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="20"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button Style="{DynamicResource NavButtonStyle}" Visibility="{Binding SixthButtonVisible}"
+                        Margin="10" Height="40" Width="40" HorizontalAlignment="Left" Click="SixthButton_Click">
+                    <TextBlock Text="{Binding SixthButtonText}"/>
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="20"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button Style="{DynamicResource NavButtonStyle}" Visibility="{Binding FifthButtonVisible}"
+                        Margin="10" Height="40" Width="40" HorizontalAlignment="Left">
+                    <TextBlock Text="{Binding FifthButtonText}"/>
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="20"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button Style="{DynamicResource NavButtonStyle}" Visibility="{Binding FourthButtonVisible}"
+                        Margin="10" Height="40" Width="40" HorizontalAlignment="Left">
+                    <TextBlock Text="{Binding FourthButtonText}"/>
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="20"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button Style="{DynamicResource NavButtonStyle}" Visibility="{Binding ThirdButtonVisible}"
+                        Margin="10" Height="40" Width="40" HorizontalAlignment="Left">
+                    <TextBlock Text="{Binding ThirdButtonText}"/>
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="20"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button Style="{DynamicResource NavButtonStyle}"
+                        Margin="10" Height="40" Width="40" HorizontalAlignment="Left" Click="SecondButton_Click">
+                    <TextBlock Text="{Binding SecondButtonText}"/>
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="20"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button Style="{DynamicResource NavButtonStyle}"
+                        Margin="10" Height="40" Width="40" HorizontalAlignment="Left">
+                    <TextBlock Text="{Binding FirstButtonText}"/>
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="20"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <Grid.Resources>
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="Background" Value="#F3EDF3"/>
+                <Style.Triggers>
+                    <Trigger Property="IsFocused"  Value="True">
+                        <Setter Property="Background" Value="White"/>
+                    </Trigger>
+                    <Trigger Property="IsFocused" Value="False">
+                        <Setter Property="Background" Value="#F3EDF3"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Resources>
+    </Grid>
+</Controls:MetroWindow>
