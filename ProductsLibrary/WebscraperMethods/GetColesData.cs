@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using ProductsLibrary.Models;
-using Windows.UI.Xaml.Media.Imaging;
+using System.Windows.Media.Imaging;
 
 namespace ProductsLibrary.WebscraperMethods
 {

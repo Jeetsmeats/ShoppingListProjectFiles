@@ -1,4 +1,5 @@
-﻿namespace ProductsLibrary.Models
+﻿using System.Windows.Media.Imaging;
+namespace ProductsLibrary.Models
 {
     public class SupermarketModel
     {
