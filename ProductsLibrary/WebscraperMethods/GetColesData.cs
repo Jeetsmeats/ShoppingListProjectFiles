@@ -1,21 +1,14 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
-using System.Windows.Documents;
-using System.Windows.Markup;
-using System.Windows.Media.Imaging;
-using static System.Net.WebRequestMethods;
+using ProductsLibrary.Models;
+using Windows.UI.Xaml.Media.Imaging;
 
-namespace ShoppingListAppLibrary
+namespace ProductsLibrary.WebscraperMethods
 {
     public class GetColesData
     {
@@ -97,7 +90,7 @@ namespace ShoppingListAppLibrary
                 .FirstOrDefault()
                 .InnerText;
 
-                pgNum = Int16.Parse(ulListElements);
+                pgNum = short.Parse(ulListElements);
             }
             #endregion
 
@@ -250,7 +243,7 @@ namespace ShoppingListAppLibrary
             #region Get data from each product tile node and instantiate useful variables
             var productProperties = htmlData;
             string? currProd;
-      
+
             List<string> pricePerQuantityList = new List<string>();
             #endregion
 
@@ -274,11 +267,37 @@ namespace ShoppingListAppLibrary
                     pricePerQuantityList.Add(currProd);
                 }
             }
-             
+
             return pricePerQuantityList;
             #endregion
         }
+        private List<string> GetProductAvailability(List<HtmlNode> htmlData)
+        {
+            var productProperties = htmlData;
 
+            List<string> availablity = new List<string>();
+
+            foreach (var product in productProperties)
+            {
+                // Get the span element list items from the price__calculation
+                // nodes, if it is empty assume it is an empty string
+                var currProd = product.Descendants("div")
+                    .Where(node => node.GetAttributeValue("class", "")
+                    .Equals("product__unavailable"))
+                    .FirstOrDefault();
+
+                if (currProd is null)
+                {
+                    availablity.Add("Visible");
+                }
+                else
+                {
+                    availablity.Add("Hidden");
+                }
+
+            }
+            return availablity;
+        }
 
         /// <summary>
         ///     Checks whether a search has occured or a category has been selected
@@ -290,7 +309,7 @@ namespace ShoppingListAppLibrary
         /// <returns>Gets the base url (the first page that appears)</returns>
         /// <exception cref="Exception">If neither a category or a search is made then 
         /// an exception is called</exception>
-        private string GetBaseUrl(string? searchText=null, ColesCategories category=ColesCategories.None)
+        private string GetBaseUrl(string? searchText = null, ColesCategories category = ColesCategories.None)
         {
             #region Return the url of the first page of the category selected
             if (searchText is null && category != ColesCategories.None)
@@ -350,7 +369,7 @@ namespace ShoppingListAppLibrary
         /// <param name="url">Website address to a page gotten from a search</param>
         /// <param name="finalPg">The final page number in the navigation bar</param>
         /// <returns>The list of pages from the navigation bar of the given category</returns>
-        public List<string> SearchUrls(string url, int finalPg) 
+        public List<string> SearchUrls(string url, int finalPg)
         {
             #region Use the number of pages and create the url to navigate to each page
             List<string> urlList = new List<string>();
@@ -416,8 +435,10 @@ namespace ShoppingListAppLibrary
                 pdPrices = GetProductPrice(htmlItems),
                 pdQuantity = GetProductQuantity(htmlItems),
                 pdPricePerQuantity = GetPricePerQuantity(htmlItems),
-                bitmapImages = RunImages(htmlItems)
+                bitmapImages = RunImages(htmlItems),
+                productAvailabilities = GetProductAvailability(htmlItems)
             };
+
             #endregion
 
             #region Sort data into supermarket model list corresponding to each product tile item on the page
@@ -430,8 +451,8 @@ namespace ShoppingListAppLibrary
                     Price = tasks.pdPrices[i],
                     Quantity = tasks.pdQuantity[i],
                     PricePerQuantity = tasks.pdPricePerQuantity[i],
-                    Company = Company.Coles,
-                    Image = tasks.bitmapImages[i]
+                    Image = tasks.bitmapImages[i],
+                    AvailabilityVisibility = tasks.productAvailabilities[i]
                 };
                 smData.Add(smModel);
             }
@@ -457,7 +478,8 @@ namespace ShoppingListAppLibrary
                 pdPrices = GetProductPrice(htmlItems),
                 pdQuantity = GetProductQuantity(htmlItems),
                 pdPricePerQuantity = GetPricePerQuantity(htmlItems),
-                bitmapImages = RunImages(htmlItems)
+                bitmapImages = RunImages(htmlItems),
+                productAvailabilities = GetProductAvailability(htmlItems)
             };
             #endregion
 
@@ -471,8 +493,8 @@ namespace ShoppingListAppLibrary
                     Price = tasks.pdPrices[i],
                     Quantity = tasks.pdQuantity[i],
                     PricePerQuantity = tasks.pdPricePerQuantity[i],
-                    Company = Company.Coles,
-                    Image = tasks.bitmapImages[i]
+                    Image = tasks.bitmapImages[i],
+                    AvailabilityVisibility = tasks.productAvailabilities[i]
                 };
                 smData.Add(smModel);
             }

@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ShoppingListAppLibrary\ShoppingListAppLibrary.csproj" />
+    <ProjectReference Include="..\ProductsLibrary\ProductsLibrary.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Markup;
-using System.Windows.Media.Imaging;
-
-namespace ShoppingListAppLibrary
+﻿namespace ProductsLibrary.Models
 {
     public class SupermarketModel
     {
-        /// <summary>
-        /// Name of the product as listed
-        /// </summary>
-        public string ProductName { get; set; }
+
         /// <summary>
         /// Database key
         /// </summary>
         public int id { get; set; }
+
+        /// <summary>
+        /// Name of the product as listed
+        /// </summary>
+        public string ProductName { get; set; }
         /// <summary>
         /// Product retail price
         /// </summary>
@@ -28,10 +21,6 @@ namespace ShoppingListAppLibrary
         /// </summary>
         public string PricePerQuantity { get; set; }
         /// <summary>
-        /// Company enum
-        /// </summary>
-        public Company Company { get; set; }
-        /// <summary>
         /// Weight, volume or number of items of the product
         /// </summary>
         public string Quantity { get; set; }
@@ -39,5 +28,9 @@ namespace ShoppingListAppLibrary
         /// Sets bitmap image of product icon
         /// </summary>
         public BitmapImage Image { get; set; }
+        /// <summary>
+        /// Checks if the product is available on stores
+        /// </summary>
+        public string AvailabilityVisibility { get; set; }
     }
 }

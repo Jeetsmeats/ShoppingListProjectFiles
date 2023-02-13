@@ -1,5 +1,4 @@
 ﻿using MahApps.Metro.Controls;
-using ShoppingListAppLibrary;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,10 +9,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows.Media.Imaging;
-using System.Windows.Shell;
 using System.IO;
-using Microsoft.Extensions.Configuration;
+using ProductsLibrary.WebscraperMethods;
+using ProductsLibrary.Models;
 
 namespace ShoppingListApp
 {
@@ -22,7 +20,7 @@ namespace ShoppingListApp
     /// </summary>
     public partial class CreateColesForm : MetroWindow, INotifyPropertyChanged
     {
-        private const string rootPath = @"C:\Users\gunje\Documents\ShoppingListProjectFiles\ShoppingListApp";
+        private const string rootPath = @"C:\Users\gunje\Documents\ShoppingListProjectFiles\ShoppingListApp\coles-png-images";
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
@@ -107,7 +105,7 @@ namespace ShoppingListApp
             set { _SixthButtonVisible = value; OnPropertyChanged(); }
         }
 
-        private string _SeventhButtonText;
+        private string _SeventhButtonText = "";
         public string SeventhButtonText
         {
             get { return _SeventhButtonText; }
@@ -163,16 +161,11 @@ namespace ShoppingListApp
         {
             InitializeComponent();
             this.DataContext = this;
-            IConfigurationBuilder build = new ConfigurationBuilder()
-                 .SetBasePath(Directory.GetCurrentDirectory())
-                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
             GetColesData cd_0 = new GetColesData();
             Products = cd_0.GetPageData(cd_0.CategoryUrls, out List<string>? urlList, category:ColesCategories.Household);
             PageNavigationList = urlList;
-           
-            //IConfiguration _configuration = build.Build();
-            //string ConnectionString = _configuration.GetConnectionString("dbConnection");
+            NavButtonVisibilityChange();
 
             List<string> directories = Directory.EnumerateFiles(rootPath, "*.*", SearchOption.TopDirectoryOnly)
                 .Where(d => d.EndsWith("png")).ToList();
@@ -204,6 +197,8 @@ namespace ShoppingListApp
                 GetColesData cd = new GetColesData();
                 Products = cd.GetPageData(cd.SearchUrls, out List<string>? urlList, searchText:Text);
                 PageNavigationList = urlList;
+                NavButtonVisibilityChange();
+
                 searchBar.Foreground = Brushes.DarkSlateGray;
                 searchBar.Text = "Search";
             }
@@ -286,6 +281,7 @@ namespace ShoppingListApp
             currItem = currItem.Substring(0, currItem.IndexOf(","))
                 .Remove(0, 1);
             ColesCategories Category = Enum.Parse<ColesCategories>(currItem);
+
             GetColesData cd = new GetColesData();
             Products = cd.GetPageData(cd.CategoryUrls, out List<string>? urlList, category: Category);
             PageNavigationList = urlList;
@@ -311,8 +307,8 @@ namespace ShoppingListApp
 
         private void NavButtonVisibilityChange()
         {
-            int? pageCount = PageNavigationList.Count;
-
+            int? pageCount = PageNavigationList is not null ? PageNavigationList.Count : null;
+            VisibleNav = "Visible";
             switch (pageCount)
             {
                 case 2:
@@ -371,45 +367,134 @@ namespace ShoppingListApp
                     FifthButtonVisible = "Visible";
                     FourthButtonVisible = "Visible";
                     ThirdButtonVisible = "Visible";
+
+                    SecondButtonText = "2";
+                    ThirdButtonText = "3";
+                    FourthButtonText = "4";
+                    FifthButtonText= "5";
+                    SixthButtonText = "...";
+                    SeventhButtonText = $"{pageCount}";
+
                     break;
                 default:
                     VisibleNav = "Hidden";
                     break;
             }
+            Debug.WriteLine("leg");
         }
 
         private void SecondButton_Click(object sender, RoutedEventArgs e)
         {
-            if (SecondButtonText != "..." && SecondButtonText != "")
+           
+            if (SecondButtonText == "2")
             {
                 GetColesData cd = new GetColesData();
                 Products = cd.GetPageData(PageNavigationList[Int16.Parse(SecondButtonText) - 1]);
 
-                SecondButtonText = "...";
-                ThirdButtonText = $"{Int16.Parse(ThirdButtonText) + 3}";
-                FourthButtonText = $"{Int16.Parse(FourthButtonText) + 3}";
-                FifthButtonText = $"{Int16.Parse(FifthButtonText) + 3}";
+                ThirdButtonText = "3";
+                FourthButtonText = "4";
+                FifthButtonText = "5";
+                SixthButtonText = "...";
             }
-            else if (SecondButtonText)
-            else if (SecondButtonText == "..." && ThirdButtonText == "4")
-                    {
-
-                    }
-                    else if (SecondButtonText == "...")
-                    {
-                        ThirdButtonText = $"{Int16.Parse(ThirdButtonText) - 3}";
-                        FourthButtonText = $"{Int16.Parse(FourthButtonText) - 3}";
-                        FifthButtonText = $"{Int16.Parse(FifthButtonText) - 3}";
-                    }
-                    else
-                    {
-                        throw new Exception("The value in ")
-                    }
+            else if (SecondButtonText == "..." && (ThirdButtonText == "6" || ThirdButtonText == "5"))
+            {
+                SecondButtonText = "2";
+                ThirdButtonText = "3";
+                FourthButtonText = "4";
+                FifthButtonText = "5";
+                SixthButtonText = "...";
+            }
+            else if (SecondButtonText == "..." && (SixthButtonText == $"{PageNavigationList.Count - 1}" || SixthButtonText == "..."))
+            {
+                SixthButtonText = "...";
+                ThirdButtonText = $"{Int16.Parse(ThirdButtonText) - 3}";
+                FourthButtonText = $"{Int16.Parse(FourthButtonText) - 3}";
+                FifthButtonText = $"{Int16.Parse(FifthButtonText) - 3}";
+            }
+            else if (SecondButtonText == "..." && (SixthButtonText == "..." && FifthButtonText == "8"))
+            {
+                SecondButtonText = "2";
+                ThirdButtonText = $"{Int16.Parse(ThirdButtonText) - 3}";
+                FourthButtonText = $"{Int16.Parse(FourthButtonText) - 3}";
+                FifthButtonText = $"{Int16.Parse(FifthButtonText) - 3}";
+            }
+            
         }
 
         private void SixthButton_Click(object sender, RoutedEventArgs e)
         {
             
+            if (SixthButtonText == $"{PageNavigationList.Count - 1}")
+            {
+                GetColesData cd = new GetColesData();
+                Products = cd.GetPageData(PageNavigationList[Int16.Parse(SixthButtonText) - 1]);
+
+                SecondButtonText = "...";
+                ThirdButtonText = $"{PageNavigationList.Count - 4}";
+                FourthButtonText = $"{PageNavigationList.Count - 3}";
+                FifthButtonText = $"{PageNavigationList.Count - 2}";
+               
+            }
+            else if (SixthButtonText == "..." && (FifthButtonText == $"{PageNavigationList.Count - 4}" || FifthButtonText == $"{PageNavigationList.Count - 3}" ||
+                FifthButtonText == $"{PageNavigationList.Count - 2}"))
+            {
+                SecondButtonText = "...";
+                ThirdButtonText = $"{PageNavigationList.Count - 4}";
+                FourthButtonText = $"{PageNavigationList.Count - 3}";
+                FifthButtonText = $"{PageNavigationList.Count - 2}";
+                SixthButtonText = $"{PageNavigationList.Count - 1}";
+            }
+            else if (SixthButtonText == "..." && (SecondButtonText == "2" || SecondButtonText == "..."))
+            {
+                SecondButtonText = "...";
+                ThirdButtonText = $"{Int16.Parse(ThirdButtonText) + 3}";
+                FourthButtonText = $"{Int16.Parse(FourthButtonText) + 3}";
+                FifthButtonText = $"{Int16.Parse(FifthButtonText) + 3}";
+            }
+            else if (SixthButtonText == "..." && (SecondButtonText == "..." && ThirdButtonText == $"{PageNavigationList.Count - 6}"))
+            {
+                SixthButtonText = $"{PageNavigationList.Count - 1}";
+                ThirdButtonText = $"{Int16.Parse(ThirdButtonText) - 3}";
+                FourthButtonText = $"{Int16.Parse(FourthButtonText) - 3}";
+                FifthButtonText = $"{Int16.Parse(FifthButtonText) - 3}";
+            }
+        }
+
+        private void FirstButton_Click(object sender, RoutedEventArgs e)
+        {
+            GetColesData cd = new GetColesData();
+            Products = cd.GetPageData(PageNavigationList[Int16.Parse(FirstButtonText) - 1]);
+            NavButtonVisibilityChange();
+        }
+
+        private void ThirdButton_Click(object sender, RoutedEventArgs e)
+        {
+            GetColesData cd = new GetColesData();
+            Products = cd.GetPageData(PageNavigationList[Int16.Parse(ThirdButtonText) - 1]);
+        }
+
+        private void FourthButton_Click(object sender, RoutedEventArgs e)
+        {
+            GetColesData cd = new GetColesData();
+            Products = cd.GetPageData(PageNavigationList[Int16.Parse(FourthButtonText) - 1]);
+        }
+
+        private void FifthButton_Click(object sender, RoutedEventArgs e)
+        {
+            GetColesData cd = new GetColesData();
+            Products = cd.GetPageData(PageNavigationList[Int16.Parse(FifthButtonText) - 1]);
+        }
+
+        private void SeventhButton_Click(object sender, RoutedEventArgs e)
+        {
+            GetColesData cd = new GetColesData();
+            Products = cd.GetPageData(PageNavigationList[Int16.Parse(SeventhButtonText) - 1]);
+
+            SecondButtonText = "...";
+            ThirdButtonText = $"{PageNavigationList.Count - 4}";
+            FourthButtonText = $"{PageNavigationList.Count - 3}";
+            FifthButtonText = $"{PageNavigationList.Count - 2}";
+            SixthButtonText = $"{PageNavigationList.Count - 1}";
         }
     }
 }

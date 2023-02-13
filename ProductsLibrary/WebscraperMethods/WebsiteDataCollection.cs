@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
-namespace ShoppingListAppLibrary
+namespace ProductsLibrary.WebscraperMethods
 {
     public class WebsiteDataCollection
     {
@@ -29,5 +29,9 @@ namespace ShoppingListAppLibrary
         /// List of website bitmap images of product icons
         /// </summary>
         public List<BitmapImage> bitmapImages { get; set; }
+        /// <summary>
+        /// List of all product availabilities
+        /// </summary>
+        public List<string> productAvailabilities { get; set; }
     }
 }
