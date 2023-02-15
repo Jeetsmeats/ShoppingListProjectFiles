@@ -13,6 +13,7 @@ using System.IO;
 using ProductsLibrary.WebscraperMethods;
 using ProductsLibrary.Models;
 using ProductsLibrary.Data;
+using ProductsLibrary.DataAccess;
 
 namespace ShoppingListApp
 {

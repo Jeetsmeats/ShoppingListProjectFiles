@@ -1,4 +1,4 @@
-﻿using ProductsLibrary.DataAccess;
+﻿using ProductsLibrary.Data;
 using ProductsLibrary.Models;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProductsLibrary.Data
+namespace ProductsLibrary.DataAccess
 {
     public class ProductData : IProductData
     {

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace ProductsLibrary.DataAccess
+namespace ProductsLibrary.Data
 {
     public interface ISqlDataAccess
     {

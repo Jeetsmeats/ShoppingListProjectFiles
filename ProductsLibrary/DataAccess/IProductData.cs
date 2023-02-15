@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ProductsLibrary.Data
+namespace ProductsLibrary.DataAccess
 {
     public interface IProductData
     {

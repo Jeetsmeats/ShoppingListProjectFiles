@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ProductsLibrary.Data;
 using ProductsLibrary.DataAccess;
 
 namespace ShoppingListApp

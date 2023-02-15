@@ -1,11 +1,10 @@
 ﻿using Dapper;
-using System.Data;
 using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace ProductsLibrary.DataAccess
+namespace ProductsLibrary.Data
 {
     public class SqlDataAccess : ISqlDataAccess
     {
