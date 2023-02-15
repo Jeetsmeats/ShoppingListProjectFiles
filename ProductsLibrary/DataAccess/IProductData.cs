@@ -10,6 +10,6 @@ namespace ProductsLibrary.Data
         Task DeleteProducts();
         Task<SupermarketModel?> GetProduct(int id);
         Task<IEnumerable<SupermarketModel>> GetProducts();
-        Task InsertUser(SupermarketModel product);
+        Task InsertProduct(SupermarketModel product);
     }
 }

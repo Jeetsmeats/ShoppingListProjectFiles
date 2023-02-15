@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProductsLibrary.D
+namespace ProductsLibrary.Data
 {
     public class ProductData : IProductData
     {
@@ -28,15 +28,14 @@ namespace ProductsLibrary.D
             return results.FirstOrDefault();
         }
 
-        public Task InsertUser(SupermarketModel product) =>
+        public Task InsertProduct(SupermarketModel product) =>
             _db.SaveData(
-                storedProcedure: "dbo.spProduct_Insert",
+                storedProcedure: "dbo.s pProduct_Insert",
                 new
                 {
                     product.ProductName,
                     product.Price,
                     product.Quantity,
-                    product.Company,
                     product.PricePerQuantity,
                     product.Image,
                     product.AvailabilityVisibility

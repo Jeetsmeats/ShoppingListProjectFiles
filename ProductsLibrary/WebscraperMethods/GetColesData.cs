@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 
 namespace ProductsLibrary.WebscraperMethods
 {
-    public class GetColesData
+    public static class GetColesData
     {
         /// <summary>
         /// delegate used for getting the number of navigation pages
@@ -27,7 +27,7 @@ namespace ProductsLibrary.WebscraperMethods
         /// </summary>
         /// <param name="url">website address</param>
         /// <returns>Gets the html client string</returns>
-        private Task<string> GetHtmlClient(string url)
+        private static Task<string> GetHtmlClient(string url)
         {
             #region Get the website html string
             HttpClient httpClient = new HttpClient();
@@ -39,7 +39,7 @@ namespace ProductsLibrary.WebscraperMethods
         /// </summary>
         /// <param name="url">Submitted website address</param>
         /// <returns></returns>
-        private List<HtmlNode> GetHtmlNode(string url)
+        private static List<HtmlNode> GetHtmlNode(string url)
         {
             #region Parse the html into a html document for data manipulation
             string htmlClient = GetHtmlClient(url).Result;
@@ -62,7 +62,7 @@ namespace ProductsLibrary.WebscraperMethods
         /// <param name="url">submitted website address</param>
         /// <param name="pgNum">returns the number of a navigation pages</param>
         /// <returns>Gets the data list of descendants of each product tile</returns> 
-        private List<HtmlNode> GetHtmlNode(string url, out int? pgNum)
+        private static List<HtmlNode> GetHtmlNode(string url, out int? pgNum)
         {
             #region Parse the html into a html document for data manipulation
             string htmlClient = GetHtmlClient(url).Result;
@@ -109,7 +109,7 @@ namespace ProductsLibrary.WebscraperMethods
         /// </summary>
         /// <param name="htmlData">List of the data from every product tile in the page</param>
         /// <returns>Gets the list of product names</returns>
-        private List<string> GetProductName(List<HtmlNode> htmlData)
+        private static List<string> GetProductName(List<HtmlNode> htmlData)
         {
 
             #region Get data from each product tile node and instantiate useful variables
@@ -151,13 +151,12 @@ namespace ProductsLibrary.WebscraperMethods
 
         }
 
-
         /// <summary>
         /// Uses product tile data to get product prices
         /// </summary>
         /// <param name="htmlData">List of data from every product tile in the page</param>
         /// <returns>Gets the list product prices</returns>
-        private List<decimal> GetProductPrice(List<HtmlNode> htmlData)
+        private static List<decimal> GetProductPrice(List<HtmlNode> htmlData)
         {
             #region Get data from each product tile node and instantiate useful variables
             var productProperties = htmlData;
@@ -196,7 +195,7 @@ namespace ProductsLibrary.WebscraperMethods
         /// </summary>
         /// <param name="htmlData">List of data from every product tile in the page</param>
         /// <returns>Gets the list of product quantities</returns>
-        private List<string> GetProductQuantity(List<HtmlNode> htmlData)
+        private static List<string> GetProductQuantity(List<HtmlNode> htmlData)
         {
             #region Get data from each product tile node and instantiate useful variables
             var productProperties = htmlData;
@@ -238,7 +237,7 @@ namespace ProductsLibrary.WebscraperMethods
         /// </summary>
         /// <param name="htmlData">List of data from every product tile in the page</param>
         /// <returns>Gets the list of relative product prices</returns>
-        private List<string> GetPricePerQuantity(List<HtmlNode> htmlData)
+        private static List<string> GetPricePerQuantity(List<HtmlNode> htmlData)
         {
             #region Get data from each product tile node and instantiate useful variables
             var productProperties = htmlData;
@@ -271,12 +270,15 @@ namespace ProductsLibrary.WebscraperMethods
             return pricePerQuantityList;
             #endregion
         }
-        private List<string> GetProductAvailability(List<HtmlNode> htmlData)
+        private static List<string> GetProductAvailability(List<HtmlNode> htmlData)
         {
+            #region Get data from each product tile node and instantiate useful variables
             var productProperties = htmlData;
 
             List<string> availablity = new List<string>();
+            #endregion
 
+            #region Parse each product tile data and get the availability for each item
             foreach (var product in productProperties)
             {
                 // Get the span element list items from the price__calculation
@@ -297,6 +299,7 @@ namespace ProductsLibrary.WebscraperMethods
 
             }
             return availablity;
+            #endregion 
         }
 
         /// <summary>
@@ -309,7 +312,7 @@ namespace ProductsLibrary.WebscraperMethods
         /// <returns>Gets the base url (the first page that appears)</returns>
         /// <exception cref="Exception">If neither a category or a search is made then 
         /// an exception is called</exception>
-        private string GetBaseUrl(string? searchText = null, ColesCategories category = ColesCategories.None)
+        private static string GetBaseUrl(string? searchText = null, ColesCategories category = ColesCategories.None)
         {
             #region Return the url of the first page of the category selected
             if (searchText is null && category != ColesCategories.None)
@@ -347,7 +350,7 @@ namespace ProductsLibrary.WebscraperMethods
         /// <param name="url">Website Address to a page in a category</param>
         /// <param name="finalPg">The final page number in the navigation bar</param>
         /// <returns>The list of pages from the navigation bar of the given category</returns>
-        public List<string> CategoryUrls(string url, int finalPg)
+        public static List<string> CategoryUrls(string url, int finalPg)
         {
             #region Use the number of pages and create the url to navigate to each page
             List<string> urlList = new List<string>();
@@ -369,7 +372,7 @@ namespace ProductsLibrary.WebscraperMethods
         /// <param name="url">Website address to a page gotten from a search</param>
         /// <param name="finalPg">The final page number in the navigation bar</param>
         /// <returns>The list of pages from the navigation bar of the given category</returns>
-        public List<string> SearchUrls(string url, int finalPg)
+        public static List<string> SearchUrls(string url, int finalPg)
         {
             #region Use the number of pages and create the url to navigate to each page
             List<string> urlList = new List<string>();
@@ -388,7 +391,7 @@ namespace ProductsLibrary.WebscraperMethods
         /// </summary>
         /// <param name="htmlData">List of data from every product tile</param>
         /// <returns>List of Bitmap Images</returns>
-        private List<BitmapImage> RunImages(List<HtmlNode> htmlData)
+        private static List<BitmapImage> RunImages(List<HtmlNode> htmlData)
         {
             #region Get the url of each image on display for each item and add to a list of bitmap images
 
@@ -416,7 +419,7 @@ namespace ProductsLibrary.WebscraperMethods
         /// <param name="searchText">The search text from the search bar</param>
         /// <param name="category">The selected category from the flyview</param>
         /// <returns>List of all the product item information for each item</returns>
-        public List<SupermarketModel> GetPageData(GetPageURL getPage, out List<string>? urlList,
+        public static List<SupermarketModel> GetPageData(GetPageURL getPage, out List<string>? urlList,
             string? searchText = null, ColesCategories category = ColesCategories.None)
         {
             #region Get the basic url and then the product tile information from the page
@@ -465,7 +468,7 @@ namespace ProductsLibrary.WebscraperMethods
         /// </summary>
         /// <param name="url">Website address</param>
         /// <returns>List of Product Item data</returns>
-        public List<SupermarketModel> GetPageData(string url)
+        public static List<SupermarketModel> GetPageData(string url)
         {
             #region Get the basic url and then the product tile information from the page
             var htmlItems = GetHtmlNode(url, out int? finalPg);

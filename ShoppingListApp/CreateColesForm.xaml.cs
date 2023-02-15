@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using System.IO;
 using ProductsLibrary.WebscraperMethods;
 using ProductsLibrary.Models;
+using ProductsLibrary.Data;
 
 namespace ShoppingListApp
 {
@@ -21,6 +22,8 @@ namespace ShoppingListApp
     public partial class CreateColesForm : MetroWindow, INotifyPropertyChanged
     {
         private const string rootPath = @"C:\Users\gunje\Documents\ShoppingListProjectFiles\ShoppingListApp\coles-png-images";
+
+        private readonly IProductData dataAccess;
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
@@ -157,13 +160,13 @@ namespace ShoppingListApp
         /// <summary>
         /// Load the MainWindow and initialise the searchbar watermark
         /// </summary>
-        public CreateColesForm()
+        public CreateColesForm(IProductData dataAccess)
         {
             InitializeComponent();
             this.DataContext = this;
+            this.dataAccess = dataAccess;
 
-            GetColesData cd_0 = new GetColesData();
-            Products = cd_0.GetPageData(cd_0.CategoryUrls, out List<string>? urlList, category:ColesCategories.Household);
+            Products = GetColesData.GetPageData(GetColesData.CategoryUrls, out List<string>? urlList, category:ColesCategories.Household);
             PageNavigationList = urlList;
             NavButtonVisibilityChange();
 
@@ -180,6 +183,8 @@ namespace ShoppingListApp
             
             searchBar.Text = "Search";
             searchBar.Foreground = Brushes.DarkSlateGray;
+
+            
         }
 
         /// <summary>
@@ -194,8 +199,8 @@ namespace ShoppingListApp
             {
                 tb.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
                 string Text = searchBar.Text;
-                GetColesData cd = new GetColesData();
-                Products = cd.GetPageData(cd.SearchUrls, out List<string>? urlList, searchText:Text);
+                
+                Products = GetColesData.GetPageData(GetColesData.SearchUrls, out List<string>? urlList, searchText:Text);
                 PageNavigationList = urlList;
                 NavButtonVisibilityChange();
 
@@ -261,7 +266,7 @@ namespace ShoppingListApp
         {
             SupermarketModel currItem = (sender as Button).DataContext as SupermarketModel;
             ShoppingCartProduct.Add(currItem);
-
+            dataAccess.InsertProduct(currItem);
         }
 
         private void centralFlyoutButton_Click(object sender, RoutedEventArgs e)
@@ -282,8 +287,7 @@ namespace ShoppingListApp
                 .Remove(0, 1);
             ColesCategories Category = Enum.Parse<ColesCategories>(currItem);
 
-            GetColesData cd = new GetColesData();
-            Products = cd.GetPageData(cd.CategoryUrls, out List<string>? urlList, category: Category);
+            Products = GetColesData.GetPageData(GetColesData.CategoryUrls, out List<string>? urlList, category: Category);
             PageNavigationList = urlList;
 
             NavButtonVisibilityChange();
@@ -388,8 +392,7 @@ namespace ShoppingListApp
            
             if (SecondButtonText == "2")
             {
-                GetColesData cd = new GetColesData();
-                Products = cd.GetPageData(PageNavigationList[Int16.Parse(SecondButtonText) - 1]);
+                Products = GetColesData.GetPageData(PageNavigationList[Int16.Parse(SecondButtonText) - 1]);
 
                 ThirdButtonText = "3";
                 FourthButtonText = "4";
@@ -426,8 +429,7 @@ namespace ShoppingListApp
             
             if (SixthButtonText == $"{PageNavigationList.Count - 1}")
             {
-                GetColesData cd = new GetColesData();
-                Products = cd.GetPageData(PageNavigationList[Int16.Parse(SixthButtonText) - 1]);
+                Products = GetColesData.GetPageData(PageNavigationList[Int16.Parse(SixthButtonText) - 1]);
 
                 SecondButtonText = "...";
                 ThirdButtonText = $"{PageNavigationList.Count - 4}";
@@ -462,33 +464,28 @@ namespace ShoppingListApp
 
         private void FirstButton_Click(object sender, RoutedEventArgs e)
         {
-            GetColesData cd = new GetColesData();
-            Products = cd.GetPageData(PageNavigationList[Int16.Parse(FirstButtonText) - 1]);
+            Products = GetColesData.GetPageData(PageNavigationList[Int16.Parse(FirstButtonText) - 1]);
             NavButtonVisibilityChange();
         }
 
         private void ThirdButton_Click(object sender, RoutedEventArgs e)
         {
-            GetColesData cd = new GetColesData();
-            Products = cd.GetPageData(PageNavigationList[Int16.Parse(ThirdButtonText) - 1]);
+            Products = GetColesData.GetPageData(PageNavigationList[Int16.Parse(ThirdButtonText) - 1]);
         }
 
         private void FourthButton_Click(object sender, RoutedEventArgs e)
         {
-            GetColesData cd = new GetColesData();
-            Products = cd.GetPageData(PageNavigationList[Int16.Parse(FourthButtonText) - 1]);
+            Products = GetColesData.GetPageData(PageNavigationList[Int16.Parse(FourthButtonText) - 1]);
         }
 
         private void FifthButton_Click(object sender, RoutedEventArgs e)
         {
-            GetColesData cd = new GetColesData();
-            Products = cd.GetPageData(PageNavigationList[Int16.Parse(FifthButtonText) - 1]);
+            Products = GetColesData.GetPageData(PageNavigationList[Int16.Parse(FifthButtonText) - 1]);
         }
 
         private void SeventhButton_Click(object sender, RoutedEventArgs e)
         {
-            GetColesData cd = new GetColesData();
-            Products = cd.GetPageData(PageNavigationList[Int16.Parse(SeventhButtonText) - 1]);
+            Products = GetColesData.GetPageData(PageNavigationList[Int16.Parse(SeventhButtonText) - 1]);
 
             SecondButtonText = "...";
             ThirdButtonText = $"{PageNavigationList.Count - 4}";

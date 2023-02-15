@@ -3,7 +3,7 @@ using System.Data;
 using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace ProductsLibrary.DataAccess
 {
@@ -19,6 +19,7 @@ namespace ProductsLibrary.DataAccess
             U parameters, string connectionId = "Default")
         {
             using IDbConnection connection = new SqlConnection(_config.GetConnectionString(connectionId));
+
             return await connection.QueryAsync<T>(storedProcedure, parameters,
                 commandType: CommandType.StoredProcedure);
         }
@@ -30,7 +31,6 @@ namespace ProductsLibrary.DataAccess
 
             await connection.ExecuteAsync(storedProcedure, parameters,
                 commandType: CommandType.StoredProcedure);
-
         }
     }
 }
