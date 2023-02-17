@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Data;
 
 namespace ProductsLibrary.Data
 {
@@ -26,7 +27,8 @@ namespace ProductsLibrary.Data
         public async Task SaveData<T>(string storedProcedure,
             T parameters, string connectionId = "Default")
         {
-            using IDbConnection connection = new SqlConnection(_config.GetConnectionString(connectionId));
+            var cnnString = _config.GetConnectionString(connectionId);
+            using IDbConnection connection = new SqlConnection(cnnString);
 
             await connection.ExecuteAsync(storedProcedure, parameters,
                 commandType: CommandType.StoredProcedure);

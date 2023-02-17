@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProductsLibrary.Data;
 using ProductsLibrary.DataAccess;
 
 namespace ShoppingListApp
@@ -18,6 +19,7 @@ namespace ShoppingListApp
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddSingleton<CreateColesForm>();
+                    services.AddTransient<ISqlDataAccess, SqlDataAccess>();
                     services.AddTransient<IProductData, ProductData>();
                 }).Build();
         }
